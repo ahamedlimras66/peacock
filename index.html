@@ -1,0 +1,2104 @@
+
+<html>
+	<head>
+		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="path/to/html2pdf.js"></script>
+		<title>Beer order list</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+		<script src="script.js"></script>
+    <style>
+      /* reset */
+
+*
+{
+	border: 0;
+	box-sizing: content-box;
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	font-style: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	vertical-align: top;
+}
+
+/* content editable */
+
+*[contenteditable] { border-radius: 0.25em; min-width: 1em; outline: 0; }
+
+*[contenteditable] { cursor: pointer; }
+
+*[contenteditable]:hover, *[contenteditable]:focus, td:hover *[contenteditable], td:focus *[contenteditable], img.hover { background: #DEF; box-shadow: 0 0 1em 0.5em #DEF; }
+
+span[contenteditable] { display: inline-block; }
+
+/* heading */
+
+h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }
+
+/* table */
+
+table { font-size: 75%; table-layout: fixed; width: 100%; }
+table { border-collapse: separate; border-spacing: 2px; }
+th, td { border-width: 2px; padding: 0.5em; position: relative; text-align: left; }
+th, td { border-radius: 0.25em; border-style: solid; }
+th { background: #EEE; border-color: #BBB; }
+td { border-color: #DDD; }
+
+/* page */
+
+html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; padding: 0.5in; }
+html { background: #999; cursor: default; }
+
+body { box-sizing: border-box; height: 58in; margin: 0 auto; overflow: hidden; padding: 0.5in; width: 8.5in; }
+body { background: #FFF; border-radius: 1px; box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); }
+
+/* header */
+
+header { margin: 0 0 3em; }
+header:after { clear: both; content: ""; display: table; }
+
+header h1 { background: black; border-radius: 0.25em; color: #FFF; margin: 0 0 1em; padding: 0.5em 0; }
+header address { float: left; font-size: 75%; font-style: normal; line-height: 1.25; margin: 0 1em 1em 0; }
+header address p { margin: 0 0 0.25em; }
+header span, header img { display: block; float: right; }
+header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; position: relative; }
+header img { max-height: 100%; max-width: 100%; }
+header input { cursor: pointer; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; height: 100%; left: 0; opacity: 0; position: absolute; top: 0; width: 100%; }
+
+/* article */
+
+article, article address, table.meta, table.inventory { margin: 0 0 3em; }
+article:after { clear: both; content: ""; display: table; }
+article h1 { clip: rect(0 0 0 0); position: absolute; }
+
+article address { float: left; font-size: 125%; font-weight: bold; }
+
+/* table meta & balance */
+
+table.meta, table.balance { float: right; width: 36%; }
+table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
+
+/* table meta */
+
+table.meta th { width: 40%; }
+table.meta td { width: 60%; }
+
+/* table items */
+
+table.inventory { clear: both; width: 100%; }
+table.inventory th { font-weight: bold; text-align: center; }
+
+table.inventory td:nth-child(1) { width: 26%; }
+table.inventory td:nth-child(2) { width: 38%; }
+table.inventory td:nth-child(3) { text-align: right; width: 12%; }
+table.inventory td:nth-child(4) { text-align: right; width: 12%; }
+table.inventory td:nth-child(5) { text-align: right; width: 12%; }
+
+/* table balance */
+
+table.balance th, table.balance td { width: 50%; }
+table.balance td { text-align: right; }
+
+/* aside */
+
+aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
+aside h1 { border-color: #999; border-bottom-style: solid; }
+
+/* javascript */
+
+.add, .cut
+{
+	border-width: 1px;
+	display: block;
+	font-size: .8rem;
+	padding: 0.25em 0.5em;
+	float: left;
+	text-align: center;
+	width: 0.6em;
+}
+
+.add, .cut
+{
+	background: #9AF;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	background-image: -moz-linear-gradient(#00ADEE 5%, #0078A5 100%);
+	background-image: -webkit-linear-gradient(#00ADEE 5%, #0078A5 100%);
+	border-radius: 0.5em;
+	border-color: #0076A3;
+	color: #FFF;
+	cursor: pointer;
+	font-weight: bold;
+	text-shadow: 0 -1px 2px rgba(0,0,0,0.333);
+}
+
+.add { margin: -2.5em 0 0; }
+
+.add:hover { background: #00ADEE; }
+
+.cut { opacity: 0; position: absolute; top: 0; left: -1.5em; }
+.cut { -webkit-transition: opacity 100ms ease-in; }
+
+tr:hover .cut { opacity: 1; }
+
+@media print {
+	* { -webkit-print-color-adjust: exact; }
+	html { background: none; padding: 0; }
+	body { box-shadow: none; margin: 0; }
+	span:empty { display: none; }
+	.add, .cut { display: none; }
+}
+
+@page { margin: 0; }
+</style>
+	</head>
+	<body>
+
+		<header>
+<div id="content">
+			<h1>Beer order </h1>
+
+				</header>
+		<article>
+
+			<table class="inventory">
+				<thead>
+					<tr>
+						<th><span contenteditable>Item</span></th>
+
+						<th><span contenteditable>Quantity</span></th>
+
+				</thead>
+				<tbody>
+					<tr>
+						<td><p><strong>Karpackie Beer</strong></p></td>
+						<td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+					</tr>
+
+          <tr>
+            <td><p><strong>Warka Black</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+        </select></span></td>
+          </tr>
+
+          <tr>
+            <td><p><strong>san miguel 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>san miguel 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Foster's 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Foster's 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>stella 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>stella 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>1664 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>1664 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Heineken 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Heineken 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Budweiser 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Budweiser 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Carlsberg Green 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Carlsberg Green 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Carlsberg Export 568ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>
+          <tr>
+            <td><p><strong>Carlsberg Export 440ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+</select></span></td>
+          </tr>  <tr>
+              <td><p><strong>Strongbow Yellow 568ml</strong></p></td>
+              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                <option value="2">2 case</option>
+                <option value="3">3 case</option>
+                <option value="4">4 case</option>
+                <option value="5">5 case</option>
+                <option value="6">6 case</option>
+                <option value="7">7 case</option>
+                <option value="8">8 case</option>
+                <option value="9">9 case</option>
+                <option value="10">10+ case</option>
+                <option value="java" selected>select Quantity</option>
+  </select></span></td>
+            </tr>
+
+            <tr>
+              <td><p><strong>Strongbow Yellow 440ml</strong></p></td>
+              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                <option value="2">2 case</option>
+                <option value="3">3 case</option>
+                <option value="4">4 case</option>
+                <option value="5">5 case</option>
+                <option value="6">6 case</option>
+                <option value="7">7 case</option>
+                <option value="8">8 case</option>
+                <option value="9">9 case</option>
+                <option value="10">10+ case</option>
+                <option value="java" selected>select Quantity</option>
+  </select></span></td>
+            </tr>
+            <tr>
+              <td><p><strong>Strongbow rose cider </strong></p></td>
+              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                <option value="2">2 case</option>
+                <option value="3">3 case</option>
+                <option value="4">4 case</option>
+                <option value="5">5 case</option>
+                <option value="6">6 case</option>
+                <option value="7">7 case</option>
+                <option value="8">8 case</option>
+                <option value="9">9 case</option>
+                <option value="10">10+ case</option>
+                <option value="java" selected>select Quantity</option>
+  </select></span></td>
+            </tr>  <tr>
+                <td><p><strong>Strongbow Dark Fruit</strong></p></td>
+                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                  <option value="2">2 case</option>
+                  <option value="3">3 case</option>
+                  <option value="4">4 case</option>
+                  <option value="5">5 case</option>
+                  <option value="6">6 case</option>
+                  <option value="7">7 case</option>
+                  <option value="8">8 case</option>
+                  <option value="9">9 case</option>
+                  <option value="10">10+ case</option>
+                  <option value="java" selected>select Quantity</option>
+    </select></span></td>
+              </tr>
+
+              <tr>
+                  <td><p><strong>Holsten Pils 568ml</strong></p></td>
+                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+                    <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                    <option value="2">2 case</option>
+                    <option value="3">3 case</option>
+                    <option value="4">4 case</option>
+                    <option value="5">5 case</option>
+                    <option value="6">6 case</option>
+                    <option value="7">7 case</option>
+                    <option value="8">8 case</option>
+                    <option value="9">9 case</option>
+                    <option value="10">10+ case</option>
+                    <option value="java" selected>select Quantity</option>
+      </select></span></td>
+                </tr>
+
+                <tr>
+                    <td><p><strong>Holsten Pils 440ml</strong></p></td>
+                    <td><span contenteditable> <select name="Quantity" id="Quantity">
+                      <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                      <option value="2">2 case</option>
+                      <option value="3">3 case</option>
+                      <option value="4">4 case</option>
+                      <option value="5">5 case</option>
+                      <option value="6">6 case</option>
+                      <option value="7">7 case</option>
+                      <option value="8">8 case</option>
+                      <option value="9">9 case</option>
+                      <option value="10">10+ case</option>
+                      <option value="java" selected>select Quantity</option>
+                </select></span></td>
+                  </tr>
+
+                  <tr>
+                      <td><p><strong>Grolsch 440ml</strong></p></td>
+                      <td><span contenteditable> <select name="Quantity" id="Quantity">
+                        <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                        <option value="2">2 case</option>
+                        <option value="3">3 case</option>
+                        <option value="4">4 case</option>
+                        <option value="5">5 case</option>
+                        <option value="6">6 case</option>
+                        <option value="7">7 case</option>
+                        <option value="8">8 case</option>
+                        <option value="9">9 case</option>
+                        <option value="10">10+ case</option>
+                        <option value="java" selected>select Quantity</option>
+                  </select></span></td>
+                    </tr>
+
+                    <tr>
+                        <td><p><strong>LECH 440ml</strong></p></td>
+                        <td><span contenteditable> <select name="Quantity" id="Quantity">
+                          <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                          <option value="2">2 case</option>
+                          <option value="3">3 case</option>
+                          <option value="4">4 case</option>
+                          <option value="5">5 case</option>
+                          <option value="6">6 case</option>
+                          <option value="7">7 case</option>
+                          <option value="8">8 case</option>
+                          <option value="9">9 case</option>
+                          <option value="10">10+ case</option>
+                          <option value="java" selected>select Quantity</option>
+                    </select></span></td>
+                      </tr>
+
+                      <tr>
+                          <td><p><strong>Zuber</strong></p></td>
+                          <td><span contenteditable> <select name="Quantity" id="Quantity">
+                            <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                            <option value="2">2 case</option>
+                            <option value="3">3 case</option>
+                            <option value="4">4 case</option>
+                            <option value="5">5 case</option>
+                            <option value="6">6 case</option>
+                            <option value="7">7 case</option>
+                            <option value="8">8 case</option>
+                            <option value="9">9 case</option>
+                            <option value="10">10+ case</option>
+                            <option value="java" selected>select Quantity</option>
+                      </select></span></td>
+                        </tr>
+
+                        <tr>
+                            <td><p><strong>Perla Green</strong></p></td>
+                            <td><span contenteditable> <select name="Quantity" id="Quantity">
+                              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                              <option value="2">2 case</option>
+                              <option value="3">3 case</option>
+                              <option value="4">4 case</option>
+                              <option value="5">5 case</option>
+                              <option value="6">6 case</option>
+                              <option value="7">7 case</option>
+                              <option value="8">8 case</option>
+                              <option value="9">9 case</option>
+                              <option value="10">10+ case</option>
+                              <option value="java" selected>select Quantity</option>
+                        </select></span></td>
+                          </tr>
+
+                          <tr>
+                              <td><p><strong>Perla Yellow</strong></p></td>
+                              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                <option value="2">2 case</option>
+                                <option value="3">3 case</option>
+                                <option value="4">4 case</option>
+                                <option value="5">5 case</option>
+                                <option value="6">6 case</option>
+                                <option value="7">7 case</option>
+                                <option value="8">8 case</option>
+                                <option value="9">9 case</option>
+                                <option value="10">10+ case</option>
+                                <option value="java" selected>select Quantity</option>
+                          </select></span></td>
+                            </tr>
+
+                            <tr>
+                                <td><p><strong>Perla Black</strong></p></td>
+                                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                  <option value="2">2 case</option>
+                                  <option value="3">3 case</option>
+                                  <option value="4">4 case</option>
+                                  <option value="5">5 case</option>
+                                  <option value="6">6 case</option>
+                                  <option value="7">7 case</option>
+                                  <option value="8">8 case</option>
+                                  <option value="9">9 case</option>
+                                  <option value="10">10+ case</option>
+                                  <option value="java" selected>select Quantity</option>
+                            </select></span></td>
+                              </tr>
+
+                              <tr>
+                                  <td><p><strong>Red Strips 568ml</strong></p></td>
+                                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                    <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                    <option value="2">2 case</option>
+                                    <option value="3">3 case</option>
+                                    <option value="4">4 case</option>
+                                    <option value="5">5 case</option>
+                                    <option value="6">6 case</option>
+                                    <option value="7">7 case</option>
+                                    <option value="8">8 case</option>
+                                    <option value="9">9 case</option>
+                                    <option value="10">10+ case</option>
+                                    <option value="java" selected>select Quantity</option>
+                              </select></span></td>
+                                </tr>
+
+
+                                <tr>
+                                    <td><p><strong>Red Strips 440ml</strong></p></td>
+                                    <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                      <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                      <option value="2">2 case</option>
+                                      <option value="3">3 case</option>
+                                      <option value="4">4 case</option>
+                                      <option value="5">5 case</option>
+                                      <option value="6">6 case</option>
+                                      <option value="7">7 case</option>
+                                      <option value="8">8 case</option>
+                                      <option value="9">9 case</option>
+                                      <option value="10">10+ case</option>
+                                      <option value="java" selected>select Quantity</option>
+                                </select></span></td>
+                                  </tr>
+                                  <tr>
+                                      <td><p><strong>Tyskie</strong></p></td>
+                                      <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                        <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                        <option value="2">2 case</option>
+                                        <option value="3">3 case</option>
+                                        <option value="4">4 case</option>
+                                        <option value="5">5 case</option>
+                                        <option value="6">6 case</option>
+                                        <option value="7">7 case</option>
+                                        <option value="8">8 case</option>
+                                        <option value="9">9 case</option>
+                                        <option value="10">10+ case</option>
+                                        <option value="java" selected>select Quantity</option>
+                                  </select></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><strong>Debowe</strong></p></td>
+                                        <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                          <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                          <option value="2">2 case</option>
+                                          <option value="3">3 case</option>
+                                          <option value="4">4 case</option>
+                                          <option value="5">5 case</option>
+                                          <option value="6">6 case</option>
+                                          <option value="7">7 case</option>
+                                          <option value="8">8 case</option>
+                                          <option value="9">9 case</option>
+                                          <option value="10">10+ case</option>
+                                          <option value="java" selected>select Quantity</option>
+                                    </select></span></td>
+                                      </tr>
+
+
+                                      <tr>
+                                          <td><p><strong>Zywiec</strong></p></td>
+                                          <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                            <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                            <option value="2">2 case</option>
+                                            <option value="3">3 case</option>
+                                            <option value="4">4 case</option>
+                                            <option value="5">5 case</option>
+                                            <option value="6">6 case</option>
+                                            <option value="7">7 case</option>
+                                            <option value="8">8 case</option>
+                                            <option value="9">9 case</option>
+                                            <option value="10">10+ case</option>
+                                            <option value="java" selected>select Quantity</option>
+                                      </select></span></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td><p><strong>Oranjeboom</strong></p></td>
+                                            <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                              <option value="2">2 case</option>
+                                              <option value="3">3 case</option>
+                                              <option value="4">4 case</option>
+                                              <option value="5">5 case</option>
+                                              <option value="6">6 case</option>
+                                              <option value="7">7 case</option>
+                                              <option value="8">8 case</option>
+                                              <option value="9">9 case</option>
+                                              <option value="10">10+ case</option>
+                                              <option value="java" selected>select Quantity</option>
+                                        </select></span></td>
+                                          </tr>
+
+
+                                          <tr>
+                                              <td><p><strong>White Storm</strong></p></td>
+                                              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                <option value="2">2 case</option>
+                                                <option value="3">3 case</option>
+                                                <option value="4">4 case</option>
+                                                <option value="5">5 case</option>
+                                                <option value="6">6 case</option>
+                                                <option value="7">7 case</option>
+                                                <option value="8">8 case</option>
+                                                <option value="9">9 case</option>
+                                                <option value="10">10+ case</option>
+                                                <option value="java" selected>select Quantity</option>
+                                          </select></span></td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td><p><strong>Black Storm</strong></p></td>
+                                                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                  <option value="2">2 case</option>
+                                                  <option value="3">3 case</option>
+                                                  <option value="4">4 case</option>
+                                                  <option value="5">5 case</option>
+                                                  <option value="6">6 case</option>
+                                                  <option value="7">7 case</option>
+                                                  <option value="8">8 case</option>
+                                                  <option value="9">9 case</option>
+                                                  <option value="10">10+ case</option>
+                                                  <option value="java" selected>select Quantity</option>
+                                            </select></span></td>
+                                              </tr>
+
+
+                                              <tr>
+                                                  <td><p><strong>Knight Cider</strong></p></td>
+                                                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                    <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                    <option value="2">2 case</option>
+                                                    <option value="3">3 case</option>
+                                                    <option value="4">4 case</option>
+                                                    <option value="5">5 case</option>
+                                                    <option value="6">6 case</option>
+                                                    <option value="7">7 case</option>
+                                                    <option value="8">8 case</option>
+                                                    <option value="9">9 case</option>
+                                                    <option value="10">10+ case</option>
+                                                    <option value="java" selected>select Quantity</option>
+                                              </select></span></td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td><p><strong>Kcider</strong></p></td>
+                                                    <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                      <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                      <option value="2">2 case</option>
+                                                      <option value="3">3 case</option>
+                                                      <option value="4">4 case</option>
+                                                      <option value="5">5 case</option>
+                                                      <option value="6">6 case</option>
+                                                      <option value="7">7 case</option>
+                                                      <option value="8">8 case</option>
+                                                      <option value="9">9 case</option>
+                                                      <option value="10">10+ case</option>
+                                                      <option value="java" selected>select Quantity</option>
+                                                </select></span></td>
+                                                  </tr>
+
+
+                                                  <tr>
+                                                      <td><p><strong>Scrumpy Jack</strong></p></td>
+                                                      <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                        <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                        <option value="2">2 case</option>
+                                                        <option value="3">3 case</option>
+                                                        <option value="4">4 case</option>
+                                                        <option value="5">5 case</option>
+                                                        <option value="6">6 case</option>
+                                                        <option value="7">7 case</option>
+                                                        <option value="8">8 case</option>
+                                                        <option value="9">9 case</option>
+                                                        <option value="10">10+ case</option>
+                                                        <option value="java" selected>select Quantity</option>
+                                                  </select></span></td>
+                                                    </tr>
+
+
+                                                    <tr>
+                                                        <td><p><strong>Inch's Cider</strong></p></td>
+                                                        <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                          <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                          <option value="2">2 case</option>
+                                                          <option value="3">3 case</option>
+                                                          <option value="4">4 case</option>
+                                                          <option value="5">5 case</option>
+                                                          <option value="6">6 case</option>
+                                                          <option value="7">7 case</option>
+                                                          <option value="8">8 case</option>
+                                                          <option value="9">9 case</option>
+                                                          <option value="10">10+ case</option>
+                                                          <option value="java" selected>select Quantity</option>
+                                                    </select></span></td>
+                                                      </tr>
+
+
+                                                      <tr>
+                                                          <td><p><strong>Beck's 440ml</strong></p></td>
+                                                          <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                            <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                            <option value="2">2 case</option>
+                                                            <option value="3">3 case</option>
+                                                            <option value="4">4 case</option>
+                                                            <option value="5">5 case</option>
+                                                            <option value="6">6 case</option>
+                                                            <option value="7">7 case</option>
+                                                            <option value="8">8 case</option>
+                                                            <option value="9">9 case</option>
+                                                            <option value="10">10+ case</option>
+                                                            <option value="java" selected>select Quantity</option>
+                                                      </select></span></td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td><p><strong>Guinness Original 440ml </strong></p></td>
+                                                            <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                              <option value="2">2 case</option>
+                                                              <option value="3">3 case</option>
+                                                              <option value="4">4 case</option>
+                                                              <option value="5">5 case</option>
+                                                              <option value="6">6 case</option>
+                                                              <option value="7">7 case</option>
+                                                              <option value="8">8 case</option>
+                                                              <option value="9">9 case</option>
+                                                              <option value="10">10+ case</option>
+                                                              <option value="java" selected>select Quantity</option>
+                                                        </select></span></td>
+                                                          </tr>
+
+
+                                                          <tr>
+                                                              <td><p><strong>Guinness Draught 440ml</strong></p></td>
+                                                              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                <option value="2">2 case</option>
+                                                                <option value="3">3 case</option>
+                                                                <option value="4">4 case</option>
+                                                                <option value="5">5 case</option>
+                                                                <option value="6">6 case</option>
+                                                                <option value="7">7 case</option>
+                                                                <option value="8">8 case</option>
+                                                                <option value="9">9 case</option>
+                                                                <option value="10">10+ case</option>
+                                                                <option value="java" selected>select Quantity</option>
+                                                          </select></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><p><strong>Guinness irish </strong></p></td>
+                                                                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                  <option value="2">2 case</option>
+                                                                  <option value="3">3 case</option>
+                                                                  <option value="4">4 case</option>
+                                                                  <option value="5">5 case</option>
+                                                                  <option value="6">6 case</option>
+                                                                  <option value="7">7 case</option>
+                                                                  <option value="8">8 case</option>
+                                                                  <option value="9">9 case</option>
+                                                                  <option value="10">10+ case</option>
+                                                                  <option value="java" selected>select Quantity</option>
+                                                            </select></span></td>
+                                                              </tr>
+
+
+                                                            <tr>
+                                                                <td><p><strong>Carlsberg Special</strong></p></td>
+                                                                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                  <option value="2">2 case</option>
+                                                                  <option value="3">3 case</option>
+                                                                  <option value="4">4 case</option>
+                                                                  <option value="5">5 case</option>
+                                                                  <option value="6">6 case</option>
+                                                                  <option value="7">7 case</option>
+                                                                  <option value="8">8 case</option>
+                                                                  <option value="9">9 case</option>
+                                                                  <option value="10">10+ case</option>
+                                                                  <option value="java" selected>select Quantity</option>
+                                                            </select></span></td>
+                                                              </tr>
+
+
+                                                              <tr>
+                                                                  <td><p><strong>Skol Super</strong></p></td>
+                                                                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                    <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                    <option value="2">2 case</option>
+                                                                    <option value="3">3 case</option>
+                                                                    <option value="4">4 case</option>
+                                                                    <option value="5">5 case</option>
+                                                                    <option value="6">6 case</option>
+                                                                    <option value="7">7 case</option>
+                                                                    <option value="8">8 case</option>
+                                                                    <option value="9">9 case</option>
+                                                                    <option value="10">10+ case</option>
+                                                                    <option value="java" selected>select Quantity</option>
+                                                              </select></span></td>
+                                                                </tr>
+
+
+                                                                <tr>
+                                                                    <td><p><strong>Kestrel</strong></p></td>
+                                                                    <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                      <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                      <option value="2">2 case</option>
+                                                                      <option value="3">3 case</option>
+                                                                      <option value="4">4 case</option>
+                                                                      <option value="5">5 case</option>
+                                                                      <option value="6">6 case</option>
+                                                                      <option value="7">7 case</option>
+                                                                      <option value="8">8 case</option>
+                                                                      <option value="9">9 case</option>
+                                                                      <option value="10">10+ case</option>
+                                                                      <option value="java" selected>select Quantity</option>
+                                                                </select></span></td>
+                                                                  </tr>
+
+
+                                                                  <tr>
+                                                                      <td><p><strong>Tennet Super</strong></p></td>
+                                                                      <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                        <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                        <option value="2">2 case</option>
+                                                                        <option value="3">3 case</option>
+                                                                        <option value="4">4 case</option>
+                                                                        <option value="5">5 case</option>
+                                                                        <option value="6">6 case</option>
+                                                                        <option value="7">7 case</option>
+                                                                        <option value="8">8 case</option>
+                                                                        <option value="9">9 case</option>
+                                                                        <option value="10">10+ case</option>
+                                                                        <option value="java" selected>select Quantity</option>
+                                                                  </select></span></td>
+                                                                    </tr>
+
+
+                                                                    <tr>
+                                                                        <td><p><strong>Birra Moretti</strong></p></td>
+                                                                        <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                          <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                          <option value="2">2 case</option>
+                                                                          <option value="3">3 case</option>
+                                                                          <option value="4">4 case</option>
+                                                                          <option value="5">5 case</option>
+                                                                          <option value="6">6 case</option>
+                                                                          <option value="7">7 case</option>
+                                                                          <option value="8">8 case</option>
+                                                                          <option value="9">9 case</option>
+                                                                          <option value="10">10+ case</option>
+                                                                          <option value="java" selected>select Quantity</option>
+                                                                    </select></span></td>
+                                                                      </tr>
+																																			<tr>
+	                                                                        <td><p><strong>Magnum</strong></p></td>
+	                                                                        <td><span contenteditable> <select name="Quantity" id="Quantity">
+	                                                                          <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+	                                                                          <option value="2">2 case</option>
+	                                                                          <option value="3">3 case</option>
+	                                                                          <option value="4">4 case</option>
+	                                                                          <option value="5">5 case</option>
+	                                                                          <option value="6">6 case</option>
+	                                                                          <option value="7">7 case</option>
+	                                                                          <option value="8">8 case</option>
+	                                                                          <option value="9">9 case</option>
+	                                                                          <option value="10">10+ case</option>
+	                                                                          <option value="java" selected>select Quantity</option>
+	                                                                    </select></span></td>
+	                                                                      </tr>
+																																				<tr>
+																																						<td><p><strong>Magnum Green</strong></p></td>
+																																						<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																							<option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+																																							<option value="2">2 case</option>
+																																							<option value="3">3 case</option>
+																																							<option value="4">4 case</option>
+																																							<option value="5">5 case</option>
+																																							<option value="6">6 case</option>
+																																							<option value="7">7 case</option>
+																																							<option value="8">8 case</option>
+																																							<option value="9">9 case</option>
+																																							<option value="10">10+ case</option>
+																																							<option value="java" selected>select Quantity</option>
+																																				</select></span></td>
+																																					</tr>
+
+                                                                      <tr>
+                                                                          <td><p><strong>Red bull £1.55</strong></p></td>
+                                                                          <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                            <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                            <option value="2">2 case</option>
+                                                                            <option value="3">3 case</option>
+                                                                            <option value="4">4 case</option>
+                                                                            <option value="5">5 case</option>
+                                                                            <option value="6">6 case</option>
+                                                                            <option value="7">7 case</option>
+                                                                            <option value="8">8 case</option>
+                                                                            <option value="9">9 case</option>
+                                                                            <option value="10">10+ case</option>
+                                                                            <option value="java" selected>select Quantity</option>
+                                                                      </select></span></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><p><strong>Red bull £1.95</strong></p></td>
+                                                                            <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                              <option value="2">2 case</option>
+                                                                              <option value="3">3 case</option>
+                                                                              <option value="4">4 case</option>
+                                                                              <option value="5">5 case</option>
+                                                                              <option value="6">6 case</option>
+                                                                              <option value="7">7 case</option>
+                                                                              <option value="8">8 case</option>
+                                                                              <option value="9">9 case</option>
+                                                                              <option value="10">10+ case</option>
+                                                                              <option value="java" selected>select Quantity</option>
+                                                                        </select></span></td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td><p><strong>Red bull £2.50</strong></p></td>
+                                                                              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                                <option value="2">2 case</option>
+                                                                                <option value="3">3 case</option>
+                                                                                <option value="4">4 case</option>
+                                                                                <option value="5">5 case</option>
+                                                                                <option value="6">6 case</option>
+                                                                                <option value="7">7 case</option>
+                                                                                <option value="8">8 case</option>
+                                                                                <option value="9">9 case</option>
+                                                                                <option value="10">10+ case</option>
+                                                                                <option value="java" selected>select Quantity</option>
+                                                                          </select></span></td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td><p><strong>Red bull 4pack</strong></p></td>
+                                                                                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                                  <option value="2">2 case</option>
+                                                                                  <option value="3">3 case</option>
+                                                                                  <option value="4">4 case</option>
+                                                                                  <option value="5">5 case</option>
+                                                                                  <option value="6">6 case</option>
+                                                                                  <option value="7">7 case</option>
+                                                                                  <option value="8">8 case</option>
+                                                                                  <option value="9">9 case</option>
+                                                                                  <option value="10">10+ case</option>
+                                                                                  <option value="java" selected>select Quantity</option>
+                                                                            </select></span></td>
+                                                                              </tr>
+                                                                              <tr>
+                                                                                  <td><p><strong>Red bull Sugar Free small</strong></p></td>
+                                                                                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                                    <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                                    <option value="2">2 case</option>
+                                                                                    <option value="3">3 case</option>
+                                                                                    <option value="4">4 case</option>
+                                                                                    <option value="5">5 case</option>
+                                                                                    <option value="6">6 case</option>
+                                                                                    <option value="7">7 case</option>
+                                                                                    <option value="8">8 case</option>
+                                                                                    <option value="9">9 case</option>
+                                                                                    <option value="10">10+ case</option>
+                                                                                    <option value="java" selected>select Quantity</option>
+                                                                              </select></span></td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td><p><strong>Red bull Sugar Free medium</strong></p></td>
+                                                                                    <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                                      <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                                      <option value="2">2 case</option>
+                                                                                      <option value="3">3 case</option>
+                                                                                      <option value="4">4 case</option>
+                                                                                      <option value="5">5 case</option>
+                                                                                      <option value="6">6 case</option>
+                                                                                      <option value="7">7 case</option>
+                                                                                      <option value="8">8 case</option>
+                                                                                      <option value="9">9 case</option>
+                                                                                      <option value="10">10+ case</option>
+                                                                                      <option value="java" selected>select Quantity</option>
+                                                                                </select></span></td>
+                                                                                  </tr>
+                                                                                  <tr>
+                                                                                      <td><p><strong>Red bull Sugar Free large</strong></p></td>
+                                                                                      <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                                        <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                                        <option value="2">2 case</option>
+                                                                                        <option value="3">3 case</option>
+                                                                                        <option value="4">4 case</option>
+                                                                                        <option value="5">5 case</option>
+                                                                                        <option value="6">6 case</option>
+                                                                                        <option value="7">7 case</option>
+                                                                                        <option value="8">8 case</option>
+                                                                                        <option value="9">9 case</option>
+                                                                                        <option value="10">10+ case</option>
+                                                                                        <option value="java" selected>select Quantity</option>
+                                                                                  </select></span></td>
+                                                                                    </tr>
+
+
+                                                                                     <tr>          <td><a class="cut">-</a><span contenteditable>Red Bull Special edition</span></td>
+                                                                                  <td><span data-prefix></span><span>0</span></td>  </tr>
+                                                                                <tr>     <td><a class="cut">-</a><span contenteditable>Red Bull Special edition</span></td>
+                                                                                   <td><span data-prefix></span><span>0</span></td>  </tr>
+
+
+                                                                                  <tr>
+                                                                                      <td><p><strong>Coca cola can</strong></p></td>
+                                                                                      <td><span contenteditable> <select name="Quantity" id="Quantity">
+                                                                                        <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                                                                                        <option value="2">2 case</option>
+                                                                                        <option value="3">3 case</option>
+                                                                                        <option value="4">4 case</option>
+                                                                                        <option value="5">5 case</option>
+                                                                                        <option value="6">6 case</option>
+                                                                                        <option value="7">7 case</option>
+                                                                                        <option value="8">8 case</option>
+                                                                                        <option value="9">9 case</option>
+                                                                                        <option value="10">10+ case</option>
+                                                                                        <option value="java" selected>select Quantity</option>
+                                                                                  </select></span></td>
+                                                                                    </tr>
+				</tbody><tr>
+            <td><p><strong>Coca cola 500ml</strong></p></td>
+            <td><span contenteditable> <select name="Quantity" id="Quantity">
+              <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+              <option value="2">2 case</option>
+              <option value="3">3 case</option>
+              <option value="4">4 case</option>
+              <option value="5">5 case</option>
+              <option value="6">6 case</option>
+              <option value="7">7 case</option>
+              <option value="8">8 case</option>
+              <option value="9">9 case</option>
+              <option value="10">10+ case</option>
+              <option value="java" selected>select Quantity</option>
+        </select></span></td>
+          </tr>
+
+
+          <tr>
+              <td><p><strong>Coca cola 2L</strong></p></td>
+              <td><span contenteditable> <select name="Quantity" id="Quantity">
+                <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                <option value="2">2 case</option>
+                <option value="3">3 case</option>
+                <option value="4">4 case</option>
+                <option value="5">5 case</option>
+                <option value="6">6 case</option>
+                <option value="7">7 case</option>
+                <option value="8">8 case</option>
+                <option value="9">9 case</option>
+                <option value="10">10+ case</option>
+                <option value="java" selected>select Quantity</option>
+          </select></span></td>
+            </tr>
+            <tr>
+                <td><p><strong>Pepsi 2L</strong></p></td>
+                <td><span contenteditable> <select name="Quantity" id="Quantity">
+                  <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                  <option value="2">2 case</option>
+                  <option value="3">3 case</option>
+                  <option value="4">4 case</option>
+                  <option value="5">5 case</option>
+                  <option value="6">6 case</option>
+                  <option value="7">7 case</option>
+                  <option value="8">8 case</option>
+                  <option value="9">9 case</option>
+                  <option value="10">10+ case</option>
+                  <option value="java" selected>select Quantity</option>
+            </select></span></td>
+              </tr>
+
+              <tr>
+                  <td><p><strong>Mountain Dew 2L</strong></p></td>
+                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+                    <option value="null">Null</option><option value="below1"> below 1 case</option><option value="1">1 case</option>
+                    <option value="2">2 case</option>
+                    <option value="3">3 case</option>
+                    <option value="4">4 case</option>
+                    <option value="5">5 case</option>
+                    <option value="6">6 case</option>
+                    <option value="7">7 case</option>
+                    <option value="8">8 case</option>
+                    <option value="9">9 case</option>
+                    <option value="10">10+ case</option>
+                    <option value="java" selected>select Quantity</option>
+              </select></span></td>
+                </tr>
+
+
+
+
+
+
+
+
+
+								<tr>
+										<td><p><strong><b>--------Wine order ---------</b></strong></p></td>
+
+									</tr>
+
+
+
+
+								<tr>
+	                  <td><p><strong>Yellow Tail- Chardonnay</strong></p></td>
+	                  <td><span contenteditable> <select name="Quantity" id="Quantity">
+	                    <option value="null">--Needed--</option>
+											<option value="below1"> Available</option>
+	                    <option value="java" selected>select Quantity</option>
+	              </select></span></td>
+	                </tr>
+									<tr>
+											<td><p><strong>Yellow Tail-Sauvignon blanc</strong></p></td>
+											<td><span contenteditable> <select name="Quantity" id="Quantity">
+												<option value="null">--Needed--</option>
+												<option value="below1"> Available</option>
+												<option value="java" selected>select Quantity</option>
+									</select></span></td>
+										</tr>
+										<tr>
+												<td><p><strong>Yellow Tail-pinot Grigio</strong></p></td>
+												<td><span contenteditable> <select name="Quantity" id="Quantity">
+													<option value="null">--Needed--</option>
+													<option value="below1"> Available</option>
+													<option value="java" selected>select Quantity</option>
+										</select></span></td>
+											</tr>
+											<tr>
+													<td><p><strong>Yellow Tail-merlot</strong></p></td>
+													<td><span contenteditable> <select name="Quantity" id="Quantity">
+														<option value="null">--Needed--</option>
+														<option value="below1"> Available</option>
+														<option value="java" selected>select Quantity</option>
+											</select></span></td>
+												</tr>
+												<tr>
+														<td><p><strong>Yellow Tail-Cabernet Sauvignon</strong></p></td>
+														<td><span contenteditable> <select name="Quantity" id="Quantity">
+															<option value="null">--Needed--</option>
+															<option value="below1"> Available</option>
+															<option value="java" selected>select Quantity</option>
+												</select></span></td>
+													</tr>
+													<tr>
+															<td><p><strong>Yellow Tail-Malbec</strong></p></td>
+															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																<option value="null">--Needed--</option>
+																<option value="below1"> Available</option>
+																<option value="java" selected>select Quantity</option>
+													</select></span></td>
+														</tr>
+														<tr>
+																<td><p><strong>Yellow Tail-Shiraz </strong></p></td>
+																<td><span contenteditable> <select name="Quantity" id="Quantity">
+																	<option value="null">--Needed--</option>
+																	<option value="below1"> Available</option>
+																	<option value="java" selected>select Quantity</option>
+														</select></span></td>
+															</tr>
+															<tr>
+																	<td><p><strong>	Yellow Tail-jammy red roo </strong></p></td>
+																	<td><span contenteditable> <select name="Quantity" id="Quantity">
+																		<option value="null">--Needed--</option>
+																		<option value="below1"> Available</option>
+																		<option value="java" selected>select Quantity</option>
+															</select></span></td>
+																</tr>
+																<tr>
+																		<td><p><strong>	Yellow tail- jammy white roo </strong></p></td>
+																		<td><span contenteditable> <select name="Quantity" id="Quantity">
+																			<option value="null">--Needed--</option>
+																			<option value="below1"> Available</option>
+																			<option value="java" selected>select Quantity</option>
+																</select></span></td>
+																	</tr>
+																	<tr>
+																			<td><p><strong>Yellow tail- big bold red</strong></p></td>
+																			<td><span contenteditable> <select name="Quantity" id="Quantity">
+																				<option value="null">--Needed--</option>
+																				<option value="below1"> Available</option>
+																				<option value="java" selected>select Quantity</option>
+																	</select></span></td>
+																		</tr>
+																		<tr>
+																				<td><p><strong>Yellow tail- rose </strong></p></td>
+																				<td><span contenteditable> <select name="Quantity" id="Quantity">
+																					<option value="null">--Needed--</option>
+																					<option value="below1"> Available</option>
+																					<option value="java" selected>select Quantity</option>
+																		</select></span></td>
+																			</tr>
+
+
+
+
+
+
+
+
+
+																			<tr>
+																					<td><p><strong>Canti- Prosecco rose </strong></p></td>
+																					<td><span contenteditable> <select name="Quantity" id="Quantity">
+																						<option value="null">--Needed--</option>
+																						<option value="below1"> Available</option>
+																						<option value="java" selected>select Quantity</option>
+																			</select></span></td>
+																				</tr>
+																				<tr>
+																						<td><p><strong>Canti- Prosecco Brut	 </strong></p></td>
+																						<td><span contenteditable> <select name="Quantity" id="Quantity">
+																							<option value="null">--Needed--</option>
+																							<option value="below1"> Available</option>
+																							<option value="java" selected>select Quantity</option>
+																				</select></span></td>
+																					</tr>
+
+
+
+
+
+
+
+
+
+
+																					<tr>
+																							<td><p><strong>Oxford pinot </strong></p></td>
+																							<td><span contenteditable> <select name="Quantity" id="Quantity">
+																								<option value="null">--Needed--</option>
+																								<option value="below1"> Available</option>
+																								<option value="java" selected>select Quantity</option>
+																					</select></span></td>
+																						</tr>
+																						<tr>
+																								<td><p><strong>Oxford Chardonnay  </strong></p></td>
+																								<td><span contenteditable> <select name="Quantity" id="Quantity">
+																									<option value="null">--Needed--</option>
+																									<option value="below1"> Available</option>
+																									<option value="java" selected>select Quantity</option>
+																						</select></span></td>
+																							</tr>
+																							<tr>
+																									<td><p><strong>Oxford Sauvignon blanc </strong></p></td>
+																									<td><span contenteditable> <select name="Quantity" id="Quantity">
+																										<option value="null">--Needed--</option>
+																										<option value="below1"> Available</option>
+																										<option value="java" selected>select Quantity</option>
+																							</select></span></td>
+																								</tr>
+																								<tr>
+																										<td><p><strong>	Oxford Shiraz 	 </strong></p></td>
+																										<td><span contenteditable> <select name="Quantity" id="Quantity">
+																											<option value="null">--Needed--</option>
+																											<option value="below1"> Available</option>
+																											<option value="java" selected>select Quantity</option>
+																								</select></span></td>
+																									</tr><tr>
+																											<td><p><strong>Oxford Cab Sauvignon 	 </strong></p></td>
+																											<td><span contenteditable> <select name="Quantity" id="Quantity">
+																												<option value="null">--Needed--</option>
+																												<option value="below1"> Available</option>
+																												<option value="java" selected>select Quantity</option>
+																									</select></span></td>
+																										</tr>
+
+
+
+
+																										<tr>
+																												<td><p><strong>Jacob’s pinot Grigio </strong></p></td>
+																												<td><span contenteditable> <select name="Quantity" id="Quantity">
+																													<option value="null">--Needed--</option>
+																													<option value="below1"> Available</option>
+																													<option value="java" selected>select Quantity</option>
+																										</select></span></td>
+																											</tr>
+																											<tr>
+																													<td><p><strong>Jacob’s Sauvignon blanc</strong></p></td>
+																													<td><span contenteditable> <select name="Quantity" id="Quantity">
+																														<option value="null">--Needed--</option>
+																														<option value="below1"> Available</option>
+																														<option value="java" selected>select Quantity</option>
+																											</select></span></td>
+																												</tr>
+																												<tr>
+																														<td><p><strong>	Jacob’s Chardonnay </strong></p></td>
+																														<td><span contenteditable> <select name="Quantity" id="Quantity">
+																															<option value="null">--Needed--</option>
+																															<option value="below1"> Available</option>
+																															<option value="java" selected>select Quantity</option>
+																												</select></span></td>
+																													</tr>
+																													<tr>
+																															<td><p><strong>	Jacob’s reserve Chardonnay  	 </strong></p></td>
+																															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																<option value="null">--Needed--</option>
+																																<option value="below1"> Available</option>
+																																<option value="java" selected>select Quantity</option>
+																													</select></span></td>
+																														</tr><tr>
+																																<td><p><strong>	Jacob’s Shiraz 	 </strong></p></td>
+																																<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																	<option value="null">--Needed--</option>
+																																	<option value="below1"> Available</option>
+																																	<option value="java" selected>select Quantity</option>
+																														</select></span></td>
+																															</tr>
+																															<tr>
+																																	<td><p><strong>Jacob’s Shiraz rose 	 </strong></p></td>
+																																	<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																		<option value="null">--Needed--</option>
+																																		<option value="below1"> Available</option>
+																																		<option value="java" selected>select Quantity</option>
+																															</select></span></td>
+																																</tr>
+
+
+
+
+
+
+
+
+
+																																<tr>
+																																	 <td><p><strong>	Gailo Chardonnay </strong></p></td>
+																																	 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																		 <option value="null">--Needed--</option>
+																																		 <option value="below1"> Available</option>
+																																		 <option value="java" selected>select Quantity</option>
+																															 </select></span></td>
+																																 </tr>
+																																 <tr>
+																																		 <td><p><strong>	Gailo pinot Grigio</strong></p></td>
+																																		 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																			 <option value="null">--Needed--</option>
+																																			 <option value="below1"> Available</option>
+																																			 <option value="java" selected>select Quantity</option>
+																																 </select></span></td>
+																																	 </tr>
+																																	 <tr>
+																																			 <td><p><strong>	Gailo Sauvignon blanc </strong></p></td>
+																																			 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																				 <option value="null">--Needed--</option>
+																																				 <option value="below1"> Available</option>
+																																				 <option value="java" selected>select Quantity</option>
+																																	 </select></span></td>
+																																		 </tr>
+																																		 <tr>
+																																				 <td><p><strong>		Gailo moscato  	 </strong></p></td>
+																																				 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																					 <option value="null">--Needed--</option>
+																																					 <option value="below1"> Available</option>
+																																					 <option value="java" selected>select Quantity</option>
+																																		 </select></span></td>
+																																			 </tr><tr>
+																																					 <td><p><strong>	Gailo summer rose  	 </strong></p></td>
+																																					 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																						 <option value="null">--Needed--</option>
+																																						 <option value="below1"> Available</option>
+																																						 <option value="java" selected>select Quantity</option>
+																																			 </select></span></td>
+																																				 </tr>
+																																				 <tr>
+																																						 <td><p><strong>	Gailo white Grenache 	 </strong></p></td>
+																																						 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																							 <option value="null">--Needed--</option>
+																																							 <option value="below1"> Available</option>
+																																							 <option value="java" selected>select Quantity</option>
+																																				 </select></span></td>
+																																					 </tr>
+
+
+
+
+																																					 <tr>
+																																							 <td><p><strong>	 Gailo pink moscato 	 </strong></p></td>
+																																							 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																								 <option value="null">--Needed--</option>
+																																								 <option value="below1"> Available</option>
+																																								 <option value="java" selected>select Quantity</option>
+																																					 </select></span></td>
+																																						 </tr>
+
+																																						 <tr>
+																																								 <td><p><strong>Gailo white Zinfandel 	 </strong></p></td>
+																																								 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																									 <option value="null">--Needed--</option>
+																																									 <option value="below1"> Available</option>
+																																									 <option value="java" selected>select Quantity</option>
+																																						 </select></span></td>
+																																							 </tr>
+
+																																							 <tr>
+																																									 <td><p><strong>	Gailo merlot 	 </strong></p></td>
+																																									 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																										 <option value="null">--Needed--</option>
+																																										 <option value="below1"> Available</option>
+																																										 <option value="java" selected>select Quantity</option>
+																																							 </select></span></td>
+																																								 </tr>
+
+																																								 <tr>
+																																										 <td><p><strong>	Gailo Cab Sauvignon 	 </strong></p></td>
+																																										 <td><span contenteditable> <select name="Quantity" id="Quantity">
+																																											 <option value="null">--Needed--</option>
+																																											 <option value="below1"> Available</option>
+																																											 <option value="java" selected>select Quantity</option>
+																																								 </select></span></td>
+																																									 </tr>
+
+
+
+
+
+
+
+
+
+																																									 <tr>
+																																											<td><p><strong>	Barefoot Cab Sauvignon  </strong></p></td>
+																																											<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																												<option value="null">--Needed--</option>
+																																												<option value="below1"> Available</option>
+																																												<option value="java" selected>select Quantity</option>
+																																									</select></span></td>
+																																										</tr>
+																																										<tr>
+																																												<td><p><strong>	 Barefoot jammy red</strong></p></td>
+																																												<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																													<option value="null">--Needed--</option>
+																																													<option value="below1"> Available</option>
+																																													<option value="java" selected>select Quantity</option>
+																																										</select></span></td>
+																																											</tr>
+																																											<tr>
+																																													<td><p><strong>		 Barefoot Malbec </strong></p></td>
+																																													<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																														<option value="null">--Needed--</option>
+																																														<option value="below1"> Available</option>
+																																														<option value="java" selected>select Quantity</option>
+																																											</select></span></td>
+																																												</tr>
+																																												<tr>
+																																														<td><p><strong>		Barefoot moscato  	 </strong></p></td>
+																																														<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																															<option value="null">--Needed--</option>
+																																															<option value="below1"> Available</option>
+																																															<option value="java" selected>select Quantity</option>
+																																												</select></span></td>
+																																													</tr><tr>
+																																															<td><p><strong>	Barefoot pink moscato 	 </strong></p></td>
+																																															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																<option value="null">--Needed--</option>
+																																																<option value="below1"> Available</option>
+																																																<option value="java" selected>select Quantity</option>
+																																													</select></span></td>
+																																														</tr>
+																																														<tr>
+																																																<td><p><strong>	 Barefoot white Zinfandel 	 </strong></p></td>
+																																																<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																	<option value="null">--Needed--</option>
+																																																	<option value="below1"> Available</option>
+																																																	<option value="java" selected>select Quantity</option>
+																																														</select></span></td>
+																																															</tr>
+
+																																															<tr>
+																																																	<td><p><strong>	  Barefoot pink pinot Grigio 	 </strong></p></td>
+																																																	<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		<option value="null">--Needed--</option>
+																																																		<option value="below1"> Available</option>
+																																																		<option value="java" selected>select Quantity</option>
+																																															</select></span></td>
+																																																</tr>
+
+																																																<tr>
+																																																		<td><p><strong>	Barefoot Sauvignon blanc	 </strong></p></td>
+																																																		<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																			<option value="null">--Needed--</option>
+																																																			<option value="below1"> Available</option>
+																																																			<option value="java" selected>select Quantity</option>
+																																																</select></span></td>
+																																																	</tr>
+
+																																																	<tr>
+																																																			<td><p><strong>	Barefoot pinot Grigio	 </strong></p></td>
+																																																			<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																				<option value="null">--Needed--</option>
+																																																				<option value="below1"> Available</option>
+																																																				<option value="java" selected>select Quantity</option>
+																																																	</select></span></td>
+																																																		</tr>
+
+																																																		<tr>
+																																																				<td><p><strong>		Barefoot merlot 	 </strong></p></td>
+																																																				<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																					<option value="null">--Needed--</option>
+																																																					<option value="below1"> Available</option>
+																																																					<option value="java" selected>select Quantity</option>
+																																																		</select></span></td>
+																																																			</tr>
+
+
+																																																			<tr>
+																																																		 		<td><p><strong>	Lindeman’s  Shiraz   </strong></p></td>
+																																																		 		<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 			<option value="null">--Needed--</option>
+																																																		 			<option value="below1"> Available</option>
+																																																		 			<option value="java" selected>select Quantity</option>
+																																																		 </select></span></td>
+																																																		 	</tr>
+																																																		 	<tr>
+																																																		 			<td><p><strong>	 Lindeman’s Cab Sauvignon</strong></p></td>
+																																																		 			<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 				<option value="null">--Needed--</option>
+																																																		 				<option value="below1"> Available</option>
+																																																		 				<option value="java" selected>select Quantity</option>
+																																																		 	</select></span></td>
+																																																		 		</tr>
+																																																		 		<tr>
+																																																		 				<td><p><strong>		 	Lindeman’s merlot </strong></p></td>
+																																																		 				<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 					<option value="null">--Needed--</option>
+																																																		 					<option value="below1"> Available</option>
+																																																		 					<option value="java" selected>select Quantity</option>
+																																																		 		</select></span></td>
+																																																		 			</tr>
+																																																		 			<tr>
+																																																		 					<td><p><strong>		Lindeman’s rose 	 </strong></p></td>
+																																																		 					<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 						<option value="null">--Needed--</option>
+																																																		 						<option value="below1"> Available</option>
+																																																		 						<option value="java" selected>select Quantity</option>
+																																																		 			</select></span></td>
+																																																		 				</tr><tr>
+																																																		 						<td><p><strong>	Lindeman’s Chardonnay  	 </strong></p></td>
+																																																		 						<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 							<option value="null">--Needed--</option>
+																																																		 							<option value="below1"> Available</option>
+																																																		 							<option value="java" selected>select Quantity</option>
+																																																		 				</select></span></td>
+																																																		 					</tr>
+																																																		 					<tr>
+																																																		 							<td><p><strong>	Lindeman’s pinot Grigio	 </strong></p></td>
+																																																		 							<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 								<option value="null">--Needed--</option>
+																																																		 								<option value="below1"> Available</option>
+																																																		 								<option value="java" selected>select Quantity</option>
+																																																		 					</select></span></td>
+																																																		 						</tr>
+
+																																																		 						<tr>
+																																																		 								<td><p><strong>	  	Lindeman’s Sauvignon blanc </strong></p></td>
+																																																		 								<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																		 									<option value="null">--Needed--</option>
+																																																		 									<option value="below1"> Available</option>
+																																																		 									<option value="java" selected>select Quantity</option>
+																																																		 						</select></span></td>
+																																																		 							</tr>
+
+
+
+
+
+																																																									<tr>
+																																																											<td><p><strong>	Echo merlot 	 </strong></p></td>
+																																																											<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																												<option value="null">--Needed--</option>
+																																																												<option value="below1"> Available</option>
+																																																												<option value="java" selected>select Quantity</option>
+																																																									</select></span></td>
+																																																										</tr>
+
+
+
+
+
+
+
+																																																										<tr>
+																																																												<td><p><strong>		Echo red wine 	 </strong></p></td>
+																																																												<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																													<option value="null">--Needed--</option>
+																																																													<option value="below1"> Available</option>
+																																																													<option value="java" selected>select Quantity</option>
+																																																										</select></span></td>
+																																																											</tr>
+
+																																																											<tr>
+																																																													<td><p><strong>	Echo pinot Grigio rose 	 </strong></p></td>
+																																																													<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																														<option value="null">--Needed--</option>
+																																																														<option value="below1"> Available</option>
+																																																														<option value="java" selected>select Quantity</option>
+																																																											</select></span></td>
+																																																												</tr>
+
+
+																																																												<tr>
+																																																													<td><p><strong>			Echo white Zinfandel  </strong></p></td>
+																																																													<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																														<option value="null">--Needed--</option>
+																																																														<option value="below1"> Available</option>
+																																																														<option value="java" selected>select Quantity</option>
+																																																											 </select></span></td>
+																																																												</tr>
+																																																												<tr>
+																																																														<td><p><strong>	Echo rose wine </strong></p></td>
+																																																														<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																															<option value="null">--Needed--</option>
+																																																															<option value="below1"> Available</option>
+																																																															<option value="java" selected>select Quantity</option>
+																																																												</select></span></td>
+																																																													</tr>
+																																																													<tr>
+																																																															<td><p><strong>		 Echo white wine  </strong></p></td>
+																																																															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																<option value="null">--Needed--</option>
+																																																																<option value="below1"> Available</option>
+																																																																<option value="java" selected>select Quantity</option>
+																																																													</select></span></td>
+																																																														</tr>
+																																																														<tr>
+																																																																<td><p><strong>	Echo Sauvignon blanc 	 </strong></p></td>
+																																																																<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																	<option value="null">--Needed--</option>
+																																																																	<option value="below1"> Available</option>
+																																																																	<option value="java" selected>select Quantity</option>
+																																																														</select></span></td>
+																																																															</tr><tr>
+																																																																	<td><p><strong>	Echo pinot Grigio
+																																																																	 	 </strong></p></td>
+																																																																	<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																		<option value="null">--Needed--</option>
+																																																																		<option value="below1"> Available</option>
+																																																																		<option value="java" selected>select Quantity</option>
+																																																															</select></span></td>
+																																																																</tr>
+																																																																<tr>
+																																																																		<td><p><strong>	Echo Chardonnay 	 </strong></p></td>
+																																																																		<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																			<option value="null">--Needed--</option>
+																																																																			<option value="below1"> Available</option>
+																																																																			<option value="java" selected>select Quantity</option>
+																																																																</select></span></td>
+																																																																	</tr>
+
+
+
+
+
+
+
+																																																																	<tr>
+																																																																			<td><p><strong>	Casillero merlot
+																																																																				 </strong></p></td>
+																																																																			<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																				<option value="null">--Needed--</option>
+																																																																				<option value="below1"> Available</option>
+																																																																				<option value="java" selected>select Quantity</option>
+																																																																	</select></span></td>
+																																																																		</tr>
+
+
+																																																																		<tr>
+																																																																			<td><p><strong>		Casillero rose
+																																																																			 </strong></p></td>
+																																																																			<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																				<option value="null">--Needed--</option>
+																																																																				<option value="below1"> Available</option>
+																																																																				<option value="java" selected>select Quantity</option>
+																																																																	 </select></span></td>
+																																																																		</tr>
+																																																																		<tr>
+																																																																				<td><p><strong>	Casillero Malbec
+																																																																				   </strong></p></td>
+																																																																				<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																					<option value="null">--Needed--</option>
+																																																																					<option value="below1"> Available</option>
+																																																																					<option value="java" selected>select Quantity</option>
+																																																																		</select></span></td>
+																																																																			</tr>
+																																																																			<tr>
+																																																																					<td><p><strong>		 Casillero Shiraz
+																																																																					 </strong></p></td>
+																																																																					<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																						<option value="null">--Needed--</option>
+																																																																						<option value="below1"> Available</option>
+																																																																						<option value="java" selected>select Quantity</option>
+																																																																			</select></span></td>
+																																																																				</tr>
+																																																																				<tr>
+																																																																						<td><p><strong>	Casillero Chardonnay
+																																																																						 </strong></p></td>
+																																																																						<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																							<option value="null">--Needed--</option>
+																																																																							<option value="below1"> Available</option>
+																																																																							<option value="java" selected>select Quantity</option>
+																																																																				</select></span></td>
+																																																																					</tr><tr>
+																																																																							<td><p><strong>		Casillero Sauvignon blanc
+
+																																																																								 </strong></p></td>
+																																																																							<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																								<option value="null">--Needed--</option>
+																																																																								<option value="below1"> Available</option>
+																																																																								<option value="java" selected>select Quantity</option>
+																																																																					</select></span></td>
+																																																																						</tr>
+																																																																						<tr>
+																																																																								<td><p><strong>		Casillero pinot Grigio
+																																																																									  </strong></p></td>
+																																																																								<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																									<option value="null">--Needed--</option>
+																																																																									<option value="below1"> Available</option>
+																																																																									<option value="java" selected>select Quantity</option>
+																																																																						</select></span></td>
+																																																																							</tr>
+																																																																							<td><p><strong>		Casillero Cab Sauvignon
+																																																																									</strong></p></td>
+																																																																							<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																								<option value="null">--Needed--</option>
+																																																																								<option value="below1"> Available</option>
+																																																																								<option value="java" selected>select Quantity</option>
+																																																																					</select></span></td>
+																																																																						</tr>
+
+
+
+
+
+
+																																																																						<tr>
+																																																																							<td><p><strong>		Hardy’s Cab Sauvignon
+																																																																							 </strong></p></td>
+																																																																							<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																								<option value="null">--Needed--</option>
+																																																																								<option value="below1"> Available</option>
+																																																																								<option value="java" selected>select Quantity</option>
+																																																																					 </select></span></td>
+																																																																						</tr>
+																																																																						<tr>
+																																																																								<td><p><strong>	Hardy’s shiraz
+
+																																																																									 </strong></p></td>
+																																																																								<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																									<option value="null">--Needed--</option>
+																																																																									<option value="below1"> Available</option>
+																																																																									<option value="java" selected>select Quantity</option>
+																																																																						</select></span></td>
+																																																																							</tr>
+																																																																							<tr>
+																																																																									<td><p><strong>		 	Hardy’s rose
+
+																																																																									 </strong></p></td>
+																																																																									<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																										<option value="null">--Needed--</option>
+																																																																										<option value="below1"> Available</option>
+																																																																										<option value="java" selected>select Quantity</option>
+																																																																							</select></span></td>
+																																																																								</tr>
+																																																																								<tr>
+																																																																										<td><p><strong>Hardy’s merlot
+
+																																																																										 </strong></p></td>
+																																																																										<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																											<option value="null">--Needed--</option>
+																																																																											<option value="below1"> Available</option>
+																																																																											<option value="java" selected>select Quantity</option>
+																																																																								</select></span></td>
+																																																																									</tr><tr>
+																																																																											<td><p><strong>			Hardy’s Sauvignon blanc
+
+
+																																																																												 </strong></p></td>
+																																																																											<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																												<option value="null">--Needed--</option>
+																																																																												<option value="below1"> Available</option>
+																																																																												<option value="java" selected>select Quantity</option>
+																																																																									</select></span></td>
+																																																																										</tr>
+																																																																										<tr>
+																																																																												<td><p><strong>			Hardy’s Chardonnay
+
+																																																																														</strong></p></td>
+																																																																												<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																													<option value="null">--Needed--</option>
+																																																																													<option value="below1"> Available</option>
+																																																																													<option value="java" selected>select Quantity</option>
+																																																																										</select></span></td>
+																																																																											</tr>
+																																																																											<td><p><strong>		Hardy’s pinot Grigio
+																																																																													</strong></p></td>
+																																																																											<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																												<option value="null">--Needed--</option>
+																																																																												<option value="below1"> Available</option>
+																																																																												<option value="java" selected>select Quantity</option>
+																																																																									</select></span></td>
+																																																																										</tr>
+
+
+
+
+
+
+																																																																										<tr>
+																																																																											<td><p><strong>		I heart Sauvignon blanc
+
+																																																																											 </strong></p></td>
+																																																																											<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																												<option value="null">--Needed--</option>
+																																																																												<option value="below1"> Available</option>
+																																																																												<option value="java" selected>select Quantity</option>
+																																																																									 </select></span></td>
+																																																																										</tr>
+																																																																										<tr>
+																																																																												<td><p><strong>	I heart Chardonnay
+
+
+																																																																													 </strong></p></td>
+																																																																												<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																													<option value="null">--Needed--</option>
+																																																																													<option value="below1"> Available</option>
+																																																																													<option value="java" selected>select Quantity</option>
+																																																																										</select></span></td>
+																																																																											</tr>
+																																																																											<tr>
+																																																																													<td><p><strong>		 	I heart pinot Grigio
+
+
+																																																																													 </strong></p></td>
+																																																																													<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																														<option value="null">--Needed--</option>
+																																																																														<option value="below1"> Available</option>
+																																																																														<option value="java" selected>select Quantity</option>
+																																																																											</select></span></td>
+																																																																												</tr>
+																																																																												<tr>
+																																																																														<td><p><strong>I heart Shiraz
+
+																																																																														 </strong></p></td>
+																																																																														<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																															<option value="null">--Needed--</option>
+																																																																															<option value="below1"> Available</option>
+																																																																															<option value="java" selected>select Quantity</option>
+																																																																												</select></span></td>
+																																																																													</tr><tr>
+																																																																															<td><p><strong>			I heart pinot noir
+
+
+																																																																																 </strong></p></td>
+																																																																															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																																<option value="null">--Needed--</option>
+																																																																																<option value="below1"> Available</option>
+																																																																																<option value="java" selected>select Quantity</option>
+																																																																													</select></span></td>
+																																																																														</tr>
+																																																																														<tr>
+																																																																																<td><p><strong>					I heart red
+																																																																																	</strong></p></td>
+																																																																																<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																																	<option value="null">--Needed--</option>
+																																																																																	<option value="below1"> Available</option>
+																																																																																	<option value="java" selected>select Quantity</option>
+																																																																														</select></span></td>
+																																																																															</tr>
+																																																																															<td><p><strong>			I heart merlot
+
+																																																																																	</strong></p></td>
+																																																																															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																																<option value="null">--Needed--</option>
+																																																																																<option value="below1"> Available</option>
+																																																																																<option value="java" selected>select Quantity</option>
+																																																																													</select></span></td>
+																																																																														</tr>
+																																																																														<tr>
+																																																																																<td><p><strong>			I heart prosecco
+																																																																																 </strong></p></td>
+																																																																																<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																																	<option value="null">--Needed--</option>
+																																																																																	<option value="below1"> Available</option>
+																																																																																	<option value="java" selected>select Quantity</option>
+																																																																														</select></span></td>
+																																																																															</tr>
+																																																																															<td><p><strong>	I heart prosecco rose
+																																																																																	</strong></p></td>
+																																																																															<td><span contenteditable> <select name="Quantity" id="Quantity">
+																																																																																<option value="null">--Needed--</option>
+																																																																																<option value="below1"> Available</option>
+																																																																																<option value="java" selected>select Quantity</option>
+																																																																													</select></span></td>
+																																																																														</tr>
+
+
+
+
+
+
+
+
+
+
+
+			</table>
+  <center><button onclick="printFunction()">Download</button><center>
+
+	</body>
+  <script>
+      function printFunction() {
+        window.print();
+      }
+</script>
+</html>
